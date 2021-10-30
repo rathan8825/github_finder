@@ -11,23 +11,22 @@ class App extends Component {
     users: [], //empty users list
     loading: false,
   };
-  async componentDidMount() {
-    //set loading to true
+  //search github users
+  searchUsers = async (text) => {
     this.setState({ loading: true });
     //make a request
     const res = await axios.get(
-      `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+      `https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
     );
     //set state
-    this.setState({ users: res.data, loading: false });
-  }
-
+    this.setState({ users: res.data.items, loading: false });
+  };
   render() {
     return (
       <div className='App'>
         <Navbar title='GitHub-Finder' />
         <div className='container'>
-          <Search />
+          <Search searchUsers={this.searchUsers} />
           {/* pass the user props onto the users component */}
           <Users loading={this.state.loading} users={this.state.users} />
         </div>
