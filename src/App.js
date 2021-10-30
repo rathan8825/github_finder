@@ -14,6 +14,7 @@ class App extends Component {
   state = {
     users: [], //empty users list
     user: {},
+    repos: [],
     loading: false,
     alert: null,
   };
@@ -37,7 +38,16 @@ class App extends Component {
     //set state
     this.setState({ user: res.data, loading: false });
   };
-
+  //Get users repos
+  getUserRepos = async (username) => {
+    this.setState({ loading: true });
+    //make a request
+    const res = await axios.get(
+      `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    //set state
+    this.setState({ repos: res.data, loading: false });
+  };
   // clear users
   clearUsers = () => this.setState({ users: [], loading: false });
   // show alert in case of empty search query
@@ -47,7 +57,7 @@ class App extends Component {
     setTimeout(() => this.setState({ alert: null }), 3000);
   };
   render() {
-    const { users, user, loading } = this.state;
+    const { users, user, loading, repos } = this.state;
     return (
       <Router>
         <div className='App'>
@@ -79,7 +89,9 @@ class App extends Component {
                   <User
                     {...props}
                     getUser={this.getUser}
+                    getUserRepos={this.getUserRepos}
                     user={user}
+                    repos={repos}
                     loading={loading}
                   />
                 )}
