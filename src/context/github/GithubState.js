@@ -10,6 +10,17 @@ import {
   CLEAR_USERS,
 } from '../types';
 
+let githubClientId;
+let githubClientSecret;
+
+if (process.env.NODE_ENV !== 'production') {
+  githubClientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
+  githubClientSecret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
+} else {
+  githubClientId = process.env.GITHUB_CLIENT_ID;
+  githubClientSecret = process.env.GITHUB_CLIENT_SECRET;
+}
+
 const GithubState = (props) => {
   const initialstate = {
     users: [],
@@ -25,7 +36,7 @@ const GithubState = (props) => {
     setLoading();
     //make a request
     const res = await axios.get(
-      `https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+      `https://api.github.com/search/users?q=${text}&client_id=${githubClientId}&client_secret=${githubClientSecret}`
     );
     //set state
     // this.setState({ users: res.data.items, loading: false });
@@ -41,7 +52,7 @@ const GithubState = (props) => {
     setLoading();
     //make a request
     const res = await axios.get(
-      `https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+      `https://api.github.com/users/${username}?client_id=${githubClientId}&client_secret=${githubClientSecret}`
     );
     //set state
     // this.setState({ user: res.data, loading: false });
@@ -57,7 +68,7 @@ const GithubState = (props) => {
     setLoading();
     //make a request
     const res = await axios.get(
-      `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+      `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${githubClientId}&client_secret=${githubClientSecret}`
     );
     //set state
     // this.setState({ repos: res.data, loading: false });
